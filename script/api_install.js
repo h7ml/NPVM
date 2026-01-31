@@ -1,4 +1,5 @@
-const BASE_URL = "https://npvm.zeabur.app/api";
+// 支持环境变量配置 API 地址
+const BASE_URL = process.env.NPVM_API_BASE || "https://npvm.zeabur.app/api";
 
 // 100 个包列表，包含已知漏洞版本和常用包
 const packagesToInstall = [
