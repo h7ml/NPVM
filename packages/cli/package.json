@@ -1,5 +1,5 @@
 {
-  "name": "npvm",
+  "name": "npvm-cli",
   "version": "0.1.0",
   "description": "Node Package Manager Visual Platform - CLI tool",
   "type": "module",
@@ -7,7 +7,7 @@
     "npvm": "./dist/index.js"
   },
   "scripts": {
-    "build": "tsc",
+    "build": "tsup",
     "start": "tsx src/index.ts start",
     "typecheck": "tsc --noEmit"
   },
@@ -32,11 +32,12 @@
     "visual"
   ],
   "dependencies": {
-    "@npvm/server": "workspace:*",
     "commander": "^13.0.0",
     "open": "^10.1.0"
   },
   "devDependencies": {
+    "@npvm/server": "workspace:*",
+    "tsup": "^8.5.1",
     "tsx": "^4.19.0",
     "typescript": "^5.7.0"
   },
