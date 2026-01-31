@@ -4,6 +4,8 @@ import { useAppStore } from '../stores/app';
 import { REGISTRIES } from '@dext7r/npvm-shared';
 import { fetchApi, getApiBase, setApiBase } from '../lib/api';
 import { Check, AlertCircle } from 'lucide-react';
+import { Card, Button, Badge } from '../components/ui';
+import { clsx } from 'clsx';
 
 export function Settings() {
   const { t, i18n } = useTranslation();
@@ -77,7 +79,7 @@ export function Settings() {
         {t('settings.title')}
       </h1>
 
-      <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
+      <Card>
         <h3 className="font-semibold text-gray-800 dark:text-gray-100 mb-2">
           {t('settings.apiBase')}
         </h3>
@@ -87,26 +89,20 @@ export function Settings() {
             type="text"
             value={apiBaseUrl}
             onChange={(e) => { setApiBaseUrl(e.target.value); setApiStatus('idle'); }}
-            className="flex-1 px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-600 bg-transparent text-gray-800 dark:text-gray-200 font-mono text-sm"
+            className="flex-1 px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-600 bg-transparent text-gray-800 dark:text-gray-200 font-mono text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500"
             placeholder="https://npvm.zeabur.app/api"
           />
-          <button
+          <Button
             onClick={handleTestApiBase}
-            disabled={apiStatus === 'testing'}
-            className="px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600 disabled:opacity-50 flex items-center gap-2"
+            loading={apiStatus === 'testing'}
+            leftIcon={apiStatus === 'success' ? <Check size={16} /> : apiStatus === 'error' ? <AlertCircle size={16} /> : undefined}
           >
-            {apiStatus === 'testing' && <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />}
-            {apiStatus === 'success' && <Check size={16} />}
-            {apiStatus === 'error' && <AlertCircle size={16} />}
             {t('settings.testConnection')}
-          </button>
+          </Button>
           {apiBaseUrl !== '/api' && (
-            <button
-              onClick={handleResetApiBase}
-              className="px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700"
-            >
+            <Button variant="outline" onClick={handleResetApiBase}>
               {t('settings.reset')}
-            </button>
+            </Button>
           )}
         </div>
         {apiStatus === 'error' && (
@@ -115,37 +111,29 @@ export function Settings() {
         {apiStatus === 'success' && (
           <p className="mt-2 text-sm text-green-500">{t('settings.connectionSuccess')}</p>
         )}
-      </div>
+      </Card>
 
-      <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
+      <Card>
         <h3 className="font-semibold text-gray-800 dark:text-gray-100 mb-4">
           {t('settings.language')}
         </h3>
         <div className="flex gap-3">
-          <button
+          <Button
+            variant={i18n.language === 'en' ? 'primary' : 'outline'}
             onClick={() => changeLanguage('en')}
-            className={`px-4 py-2 rounded-lg border ${
-              i18n.language === 'en'
-                ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20 text-primary-600'
-                : 'border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700'
-            }`}
           >
             English
-          </button>
-          <button
+          </Button>
+          <Button
+            variant={i18n.language === 'zh' ? 'primary' : 'outline'}
             onClick={() => changeLanguage('zh')}
-            className={`px-4 py-2 rounded-lg border ${
-              i18n.language === 'zh'
-                ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20 text-primary-600'
-                : 'border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700'
-            }`}
           >
             中文
-          </button>
+          </Button>
         </div>
-      </div>
+      </Card>
 
-      <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
+      <Card>
         <h3 className="font-semibold text-gray-800 dark:text-gray-100 mb-4">
           {t('settings.projectPath')}
         </h3>
@@ -154,19 +142,16 @@ export function Settings() {
             type="text"
             value={localPath}
             onChange={(e) => setLocalPath(e.target.value)}
-            className="flex-1 px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-600 bg-transparent text-gray-800 dark:text-gray-200"
+            className="flex-1 px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-600 bg-transparent text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500"
             placeholder="/path/to/project"
           />
-          <button
-            onClick={handleSavePath}
-            className="px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600"
-          >
+          <Button onClick={handleSavePath}>
             {t('common.save')}
-          </button>
+          </Button>
         </div>
-      </div>
+      </Card>
 
-      <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
+      <Card>
         <h3 className="font-semibold text-gray-800 dark:text-gray-100 mb-4">
           {t('settings.registry')}
         </h3>
@@ -175,33 +160,38 @@ export function Settings() {
             <div
               key={reg.url}
               onClick={() => handleSetRegistry(reg.url)}
-              className={`flex items-center justify-between p-4 rounded-lg border cursor-pointer transition-colors ${
+              className={clsx(
+                'flex items-center justify-between p-4 rounded-xl border cursor-pointer transition-all duration-200',
                 currentRegistry === reg.url
-                  ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20'
-                  : 'border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700'
-              }`}
+                  ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20 shadow-sm'
+                  : 'border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 hover:border-gray-300 dark:hover:border-gray-500'
+              )}
             >
               <div>
                 <div className="font-medium text-gray-800 dark:text-gray-200">
                   {reg.name}
                 </div>
-                <div className="text-sm text-gray-500">{reg.url}</div>
+                <div className="text-sm text-gray-500 font-mono">{reg.url}</div>
                 <div className="text-xs text-gray-400 mt-1">{reg.description}</div>
               </div>
               <div className="flex items-center gap-3">
                 <div
-                  className={`w-2 h-2 rounded-full ${
+                  className={clsx(
+                    'w-2.5 h-2.5 rounded-full transition-colors',
                     registryStatuses[reg.url] ? 'bg-green-500' : 'bg-gray-400'
-                  }`}
+                  )}
                 />
                 {currentRegistry === reg.url && (
-                  <span className="text-sm text-primary-500">{t('common.active')}</span>
+                  <Badge variant="success">
+                    <Check size={10} className="mr-1" />
+                    {t('common.active')}
+                  </Badge>
                 )}
               </div>
             </div>
           ))}
         </div>
-      </div>
+      </Card>
     </div>
   );
 }

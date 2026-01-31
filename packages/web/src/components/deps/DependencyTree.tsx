@@ -1,8 +1,9 @@
 import { useTranslation } from 'react-i18next';
 import { useDependencyTree } from '../../hooks/usePackages';
 import type { DependencyNode } from '@dext7r/npvm-shared';
-import { ChevronRight, ChevronDown, Package } from 'lucide-react';
+import { ChevronRight, Package, GitBranch } from 'lucide-react';
 import { useState } from 'react';
+import { Card, EmptyState, Spinner, Badge } from '../ui';
 
 function TreeNode({ node, level = 0, t }: { node: DependencyNode; level?: number; t: (key: string) => string }) {
   const [isExpanded, setIsExpanded] = useState(level < 2);
@@ -11,24 +12,27 @@ function TreeNode({ node, level = 0, t }: { node: DependencyNode; level?: number
   return (
     <div>
       <div
-        className="flex items-center gap-2 py-1 px-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded cursor-pointer"
+        className="flex items-center gap-2 py-1.5 px-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg cursor-pointer transition-colors group"
         style={{ paddingLeft: `${level * 20 + 8}px` }}
         onClick={() => hasChildren && setIsExpanded(!isExpanded)}
       >
         {hasChildren ? (
-          isExpanded ? (
-            <ChevronDown size={16} className="text-gray-400" />
-          ) : (
-            <ChevronRight size={16} className="text-gray-400" />
-          )
+          <span className="text-gray-400 transition-transform duration-200" style={{ transform: isExpanded ? 'rotate(90deg)' : 'rotate(0deg)' }}>
+            <ChevronRight size={16} />
+          </span>
         ) : (
           <span className="w-4" />
         )}
         <Package size={14} className="text-primary-500" />
         <span className="font-medium text-gray-800 dark:text-gray-200">{node.name}</span>
-        <span className="text-sm text-gray-500">@{node.version}</span>
+        <span className="text-sm text-gray-500 font-mono">@{node.version}</span>
         {node.isCircular && (
-          <span className="text-xs text-red-500 ml-2">[{t('deps.circular')}]</span>
+          <Badge variant="error" size="sm">{t('deps.circular')}</Badge>
+        )}
+        {hasChildren && (
+          <span className="text-xs text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity">
+            ({node.children.length})
+          </span>
         )}
       </div>
       {isExpanded &&
@@ -46,19 +50,27 @@ export function DependencyTree() {
 
   if (isLoading) {
     return (
-      <div className="p-8 text-center text-gray-500">{t('deps.loading')}</div>
+      <Card className="flex items-center justify-center py-12">
+        <Spinner size="lg" className="text-primary-500" />
+        <span className="ml-3 text-gray-500">{t('deps.loading')}</span>
+      </Card>
     );
   }
 
   if (!tree || tree.children.length === 0) {
     return (
-      <div className="p-8 text-center text-gray-500">{t('deps.noDeps')}</div>
+      <Card>
+        <EmptyState
+          icon={GitBranch}
+          title={t('deps.noDeps')}
+        />
+      </Card>
     );
   }
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 max-h-[600px] overflow-y-auto scrollbar-thin">
+    <Card padding="sm" className="max-h-[600px] overflow-y-auto scrollbar-thin">
       <TreeNode node={tree} t={t} />
-    </div>
+    </Card>
   );
 }
