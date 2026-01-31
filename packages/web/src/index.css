@@ -6,6 +6,7 @@
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
+  --color-primary: 34 197 94;
 }
 
 body {
@@ -13,6 +14,7 @@ body {
   min-height: 100vh;
 }
 
+/* 滚动条 */
 .scrollbar-thin::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -29,4 +31,54 @@ body {
 
 .dark .scrollbar-thin::-webkit-scrollbar-thumb {
   background: #4b5563;
+}
+
+/* 玻璃拟态 */
+@layer components {
+  .glass {
+    @apply bg-white/70 dark:bg-gray-800/70 backdrop-blur-md border border-white/20 dark:border-gray-700/50;
+  }
+
+  .glass-card {
+    @apply glass rounded-xl shadow-lg;
+  }
+}
+
+/* 动画入场 */
+@layer utilities {
+  .animate-in {
+    animation: fadeIn 0.2s ease-out, scaleIn 0.2s ease-out;
+  }
+
+  .hover-lift {
+    @apply transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg;
+  }
+
+  .focus-ring {
+    @apply focus:outline-none focus:ring-2 focus:ring-primary-500/50 focus:ring-offset-2 dark:focus:ring-offset-gray-900;
+  }
+}
+
+/* 渐变边框效果 */
+.gradient-border {
+  position: relative;
+}
+
+.gradient-border::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(135deg, rgb(var(--color-primary)), #3b82f6);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.gradient-border:hover::before {
+  opacity: 1;
 }
