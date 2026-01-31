@@ -7,6 +7,7 @@ import { Security } from './pages/Security';
 import { Settings } from './pages/Settings';
 import { RemoteAnalysis } from './pages/RemoteAnalysis';
 import { Docs } from './pages/Docs';
+import { Changelog } from './pages/Changelog';
 import { useEffect } from 'react';
 import { useAppStore } from './stores/app';
 import { ToastProvider } from './components/ui/Toast';
@@ -29,6 +30,7 @@ export default function App() {
             <Route path="security" element={<Security />} />
             <Route path="remote" element={<RemoteAnalysis />} />
             <Route path="guide" element={<Docs />} />
+            <Route path="changelog" element={<Changelog />} />
             <Route path="settings" element={<Settings />} />
           </Route>
         </Routes>

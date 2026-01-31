@@ -1,0 +1,40 @@
+{
+  "en": [
+    {
+      "version": "0.1.0",
+      "date": "2025-01-31",
+      "changes": [
+        { "type": "feature", "text": "Dashboard with package manager overview" },
+        { "type": "feature", "text": "Package management (install/uninstall/update) with batch support" },
+        { "type": "feature", "text": "Dependency tree visualization with circular dependency detection" },
+        { "type": "feature", "text": "Security vulnerability scanning via OSV API" },
+        { "type": "feature", "text": "Remote analysis for npm packages and GitHub/GitLab repos" },
+        { "type": "feature", "text": "Multi-registry support (npm, taobao, tencent, etc.)" },
+        { "type": "feature", "text": "Shareable URL for remote analysis results" },
+        { "type": "feature", "text": "Reusable UI component library (Button, Card, Badge, etc.)" },
+        { "type": "feature", "text": "Dark mode and i18n (English / Chinese)" },
+        { "type": "feature", "text": "CLI entry point with customizable port and project path" },
+        { "type": "feature", "text": "Changelog page with timeline view" }
+      ]
+    }
+  ],
+  "zh": [
+    {
+      "version": "0.1.0",
+      "date": "2025-01-31",
+      "changes": [
+        { "type": "feature", "text": "仪表盘：包管理器概览与快捷操作" },
+        { "type": "feature", "text": "包管理：安装/卸载/更新，支持批量安装与版本指定" },
+        { "type": "feature", "text": "依赖树可视化，支持循环依赖检测" },
+        { "type": "feature", "text": "安全漏洞扫描（OSV API）" },
+        { "type": "feature", "text": "远程分析：支持 npm 包名、GitHub/GitLab 仓库" },
+        { "type": "feature", "text": "多镜像源支持与切换（npm、淘宝、腾讯等）" },
+        { "type": "feature", "text": "远程分析结果支持分享链接" },
+        { "type": "feature", "text": "可复用 UI 组件库（Button、Card、Badge 等）" },
+        { "type": "feature", "text": "暗色模式与国际化（中文 / 英文）" },
+        { "type": "feature", "text": "CLI 命令行工具，支持自定义端口和项目路径" },
+        { "type": "feature", "text": "更新日志页面（时间线视图）" }
+      ]
+    }
+  ]
+}

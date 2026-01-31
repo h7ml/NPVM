@@ -22,6 +22,7 @@
     "security": "安全扫描",
     "remote": "远程分析",
     "docs": "使用文档",
+    "changelog": "更新日志",
     "settings": "设置"
   },
   "dashboard": {
@@ -36,7 +37,11 @@
     "installPackage": "安装包",
     "viewDeps": "查看依赖",
     "securityAudit": "安全扫描",
-    "checkUpdates": "检查更新"
+    "checkUpdates": "检查更新",
+    "remoteAnalysis": "远程分析",
+    "viewDocs": "使用文档",
+    "changelog": "更新日志",
+    "settings": "设置"
   },
   "packages": {
     "title": "已安装的包",
@@ -173,5 +178,9 @@
     "links": "快捷链接",
     "liveDemo": "在线演示",
     "builtWith": "用 ❤️ 构建 by"
+  },
+  "changelog": {
+    "title": "更新日志",
+    "latest": "最新"
   }
 }

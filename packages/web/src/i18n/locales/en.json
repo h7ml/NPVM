@@ -22,6 +22,7 @@
     "security": "Security",
     "remote": "Remote",
     "docs": "Docs",
+    "changelog": "Changelog",
     "settings": "Settings"
   },
   "dashboard": {
@@ -36,7 +37,11 @@
     "installPackage": "Install Package",
     "viewDeps": "View Dependencies",
     "securityAudit": "Security Audit",
-    "checkUpdates": "Check Updates"
+    "checkUpdates": "Check Updates",
+    "remoteAnalysis": "Remote Analysis",
+    "viewDocs": "Documentation",
+    "changelog": "Changelog",
+    "settings": "Settings"
   },
   "packages": {
     "title": "Installed Packages",
@@ -173,5 +178,9 @@
     "links": "Quick Links",
     "liveDemo": "Live Demo",
     "builtWith": "Built with ❤️ by"
+  },
+  "changelog": {
+    "title": "Changelog",
+    "latest": "Latest"
   }
 }

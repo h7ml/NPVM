@@ -11,6 +11,7 @@ import {
   BookOpen,
   ExternalLink,
 } from 'lucide-react';
+import { Card, Badge } from '../components/ui';
 import { clsx } from 'clsx';
 
 function DocSection({ icon: Icon, title, children, color = 'blue' }: {
@@ -29,7 +30,7 @@ function DocSection({ icon: Icon, title, children, color = 'blue' }: {
   };
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-5">
+    <Card>
       <div className="flex items-center gap-3 mb-4">
         <div className={clsx('p-2 rounded-lg', colorMap[color])}>
           <Icon size={20} />
@@ -39,7 +40,7 @@ function DocSection({ icon: Icon, title, children, color = 'blue' }: {
       <div className="text-sm text-gray-600 dark:text-gray-400 space-y-2 leading-relaxed">
         {children}
       </div>
-    </div>
+    </Card>
   );
 }
 
@@ -186,14 +187,12 @@ export function Docs() {
               ].map(([method, path, desc]) => (
                 <tr key={path}>
                   <td className="py-1.5">
-                    <span className={clsx(
-                      'px-1.5 py-0.5 rounded text-xs font-bold',
-                      method === 'GET' && 'bg-green-100 dark:bg-green-900/30 text-green-600',
-                      method === 'POST' && 'bg-blue-100 dark:bg-blue-900/30 text-blue-600',
-                      method === 'PUT' && 'bg-orange-100 dark:bg-orange-900/30 text-orange-600',
-                    )}>
+                    <Badge
+                      variant={method === 'GET' ? 'success' : method === 'POST' ? 'info' : 'warning'}
+                      size="sm"
+                    >
                       {method}
-                    </span>
+                    </Badge>
                   </td>
                   <td className="py-1.5 font-mono text-xs">{path}</td>
                   <td className="py-1.5 text-gray-500 dark:text-gray-400">{desc}</td>

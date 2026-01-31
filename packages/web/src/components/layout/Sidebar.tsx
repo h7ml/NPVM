@@ -10,6 +10,7 @@ import {
   ChevronRight,
   Globe,
   BookOpen,
+  History,
 } from 'lucide-react';
 import { useAppStore } from '../../stores/app';
 import { clsx } from 'clsx';
@@ -25,6 +26,7 @@ export function Sidebar() {
     { path: '/security', icon: Shield, label: t('nav.security') },
     { path: '/remote', icon: Globe, label: t('nav.remote') },
     { path: '/guide', icon: BookOpen, label: t('nav.docs') },
+    { path: '/changelog', icon: History, label: t('nav.changelog') },
     { path: '/settings', icon: Settings, label: t('nav.settings') },
   ];
 

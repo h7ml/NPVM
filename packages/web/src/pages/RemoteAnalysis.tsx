@@ -20,6 +20,7 @@ import {
 } from 'lucide-react';
 import { useRemoteAnalysis } from '../hooks/usePackages';
 import { useToast } from '../components/ui/Toast';
+import { Card, Button, Badge, EmptyState } from '../components/ui';
 import type {
   RemoteAnalysisResult,
   RemotePackageInfo,
@@ -233,7 +234,7 @@ export function RemoteAnalysis() {
         {t('remote.title')}
       </h2>
 
-      <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4">
+      <Card>
         <div className="flex flex-col sm:flex-row gap-3">
           <div className="flex-1">
             <div className="relative">
@@ -259,36 +260,22 @@ export function RemoteAnalysis() {
               />
             </div>
           )}
-          <button
+          <Button
             onClick={() => handleAnalyze()}
-            disabled={analysisMutation.isPending || !repoUrl.trim()}
-            className="flex items-center justify-center gap-2 px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600 disabled:opacity-50 disabled:cursor-not-allowed"
+            disabled={!repoUrl.trim()}
+            loading={analysisMutation.isPending}
+            leftIcon={<Search size={18} />}
           >
-            {analysisMutation.isPending ? (
-              <>
-                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                {t('remote.analyzing')}
-              </>
-            ) : (
-              <>
-                <Search size={18} />
-                {t('remote.analyze')}
-              </>
-            )}
-          </button>
+            {analysisMutation.isPending ? t('remote.analyzing') : t('remote.analyze')}
+          </Button>
           {result && (
-            <button
+            <Button
+              variant="outline"
               onClick={handleCopyShareUrl}
-              className={clsx(
-                'flex items-center justify-center gap-2 px-3 py-2 rounded-lg border transition-colors',
-                copiedShare
-                  ? 'bg-green-50 dark:bg-green-900/20 border-green-300 dark:border-green-700 text-green-600 dark:text-green-400'
-                  : 'border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
-              )}
-              title={t('remote.share')}
+              leftIcon={copiedShare ? <Check size={18} /> : <Share2 size={18} />}
             >
-              {copiedShare ? <Check size={18} /> : <Share2 size={18} />}
-            </button>
+              {copiedShare ? '' : ''}
+            </Button>
           )}
         </div>
 
@@ -310,13 +297,13 @@ export function RemoteAnalysis() {
             {analysisMutation.error?.message || t('remote.error')}
           </div>
         )}
-      </div>
+      </Card>
 
       {result && (
         <div className="space-y-4">
           {/* npm 包元信息 */}
           {isNpmSource && result.packageMeta && (
-            <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4">
+            <Card>
               <div className="flex items-center gap-2 mb-3">
                 <Package size={18} className="text-primary-500" />
                 <h3 className="font-semibold text-gray-800 dark:text-gray-100">
@@ -348,27 +335,23 @@ export function RemoteAnalysis() {
               {result.packageMeta.keywords && result.packageMeta.keywords.length > 0 && (
                 <div className="flex flex-wrap gap-1 mt-2">
                   {result.packageMeta.keywords.slice(0, 10).map((kw) => (
-                    <span key={kw} className="px-2 py-0.5 text-xs bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 rounded">
-                      {kw}
-                    </span>
+                    <Badge key={kw} variant="outline" size="sm">{kw}</Badge>
                   ))}
                 </div>
               )}
-            </div>
+            </Card>
           )}
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           {/* 包列表 */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4">
+          <Card>
             <div className="flex items-center gap-2 mb-3">
               <Package size={18} className="text-primary-500" />
               <h3 className="font-medium text-gray-800 dark:text-gray-100">
                 {t('remote.packages')} ({result.packages.length})
               </h3>
               {!isNpmSource && result.lockFileType && (
-                <span className="text-xs px-2 py-0.5 bg-gray-100 dark:bg-gray-700 rounded">
-                  {result.lockFileType}
-                </span>
+                <Badge variant="outline" size="sm">{result.lockFileType}</Badge>
               )}
             </div>
             <div className="max-h-[300px] overflow-y-auto scrollbar-thin space-y-1">
@@ -382,19 +365,17 @@ export function RemoteAnalysis() {
                       {pkg.name}
                     </span>
                     {pkg.isDev && (
-                      <span className="text-xs px-1.5 py-0.5 bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400 rounded">
-                        dev
-                      </span>
+                      <Badge variant="warning" size="sm">dev</Badge>
                     )}
                   </div>
                   <span className="text-xs text-gray-500 font-mono">{pkg.version}</span>
                 </div>
               ))}
             </div>
-          </div>
+          </Card>
 
           {/* 依赖树 */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4">
+          <Card>
             <div className="flex items-center gap-2 mb-3">
               <GitBranch size={18} className="text-primary-500" />
               <h3 className="font-medium text-gray-800 dark:text-gray-100">
@@ -405,15 +386,17 @@ export function RemoteAnalysis() {
               {result.dependencyTree ? (
                 <TreeNode node={result.dependencyTree} />
               ) : (
-                <div className="text-sm text-gray-500 text-center py-4">
-                  {t('remote.noLockFile')}
-                </div>
+                <EmptyState
+                  icon={GitBranch}
+                  title={t('remote.noLockFile')}
+                  className="py-4"
+                />
               )}
             </div>
-          </div>
+          </Card>
 
           {/* 安全漏洞 */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4">
+          <Card>
             <div className="flex items-center gap-2 mb-3">
               <Shield size={18} className="text-primary-500" />
               <h3 className="font-medium text-gray-800 dark:text-gray-100">
@@ -449,17 +432,16 @@ export function RemoteAnalysis() {
                 </div>
               </>
             ) : (
-              <div className="text-center py-6">
-                <Shield size={32} className="mx-auto text-green-500 mb-2" />
-                <div className="text-sm text-green-600 dark:text-green-400">
-                  {t('security.noVulnerabilities')}
-                </div>
-              </div>
+              <EmptyState
+                icon={Shield}
+                title={t('security.noVulnerabilities')}
+                className="py-4 text-green-600 dark:text-green-400"
+              />
             )}
-          </div>
+          </Card>
 
           {/* 可更新 */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4">
+          <Card>
             <div className="flex items-center gap-2 mb-3">
               <RefreshCw size={18} className="text-primary-500" />
               <h3 className="font-medium text-gray-800 dark:text-gray-100">
@@ -489,40 +471,38 @@ export function RemoteAnalysis() {
                   <div className="text-xs text-gray-500 mb-2">{t('remote.copyCommand')}</div>
                   <div className="flex flex-wrap gap-2">
                     {(['npm', 'yarn', 'pnpm'] as const).map((pm) => (
-                      <button
+                      <Button
                         key={pm}
+                        variant={copiedPm === pm ? 'primary' : 'outline'}
+                        size="sm"
                         onClick={() => handleCopyCommand(pm)}
-                        className={clsx(
-                          'flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-lg border transition-colors',
-                          copiedPm === pm
-                            ? 'bg-green-50 dark:bg-green-900/20 border-green-300 dark:border-green-700 text-green-600 dark:text-green-400'
-                            : 'bg-gray-50 dark:bg-gray-700 border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600'
-                        )}
+                        leftIcon={copiedPm === pm ? <Check size={12} /> : <Copy size={12} />}
                       >
-                        {copiedPm === pm ? <Check size={12} /> : <Copy size={12} />}
                         {pm}
-                      </button>
+                      </Button>
                     ))}
                   </div>
                 </div>
               </>
             ) : (
-              <div className="text-center py-6 text-sm text-gray-500">
-                {t('remote.noUpdates')}
-              </div>
+              <EmptyState
+                icon={RefreshCw}
+                title={t('remote.noUpdates')}
+                className="py-4"
+              />
             )}
-          </div>
+          </Card>
         </div>
         </div>
       )}
 
       {!result && !analysisMutation.isPending && (
-        <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-8 text-center border border-gray-200 dark:border-gray-700">
-          <Globe size={48} className="mx-auto text-gray-400 mb-4" />
-          <div className="text-gray-600 dark:text-gray-400">
-            {t('remote.hint')}
-          </div>
-        </div>
+        <Card className="bg-gray-50 dark:bg-gray-800">
+          <EmptyState
+            icon={Globe}
+            title={t('remote.hint')}
+          />
+        </Card>
       )}
     </div>
   );

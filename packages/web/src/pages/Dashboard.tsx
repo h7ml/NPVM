@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
-import { Package, Shield, GitBranch, AlertTriangle, Check, ArrowUp } from 'lucide-react';
+import { Package, Shield, GitBranch, AlertTriangle, Check, ArrowUp, Globe, Settings, BookOpen, History } from 'lucide-react';
 import { usePackageManagers, useInstalledPackages } from '../hooks/usePackages';
 import { useAppStore } from '../stores/app';
 import { useQueryClient } from '@tanstack/react-query';
@@ -184,6 +184,10 @@ export function Dashboard() {
             <ActionButton icon={GitBranch} label={t('dashboard.viewDeps')} href="/dependencies" />
             <ActionButton icon={Shield} label={t('dashboard.securityAudit')} href="/security" />
             <ActionButton icon={AlertTriangle} label={t('dashboard.checkUpdates')} href="/packages" />
+            <ActionButton icon={Globe} label={t('dashboard.remoteAnalysis')} href="/remote" />
+            <ActionButton icon={BookOpen} label={t('dashboard.viewDocs')} href="/guide" />
+            <ActionButton icon={History} label={t('dashboard.changelog')} href="/changelog" />
+            <ActionButton icon={Settings} label={t('dashboard.settings')} href="/settings" />
           </div>
         </Card>
       </div>

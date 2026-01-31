@@ -11,6 +11,7 @@ import {
 } from '../../hooks/usePackages';
 import { useAppStore } from '../../stores/app';
 import { ConfirmDialog } from '../ui/ConfirmDialog';
+import { Card, Button, Badge, EmptyState } from '../ui';
 import { clsx } from 'clsx';
 
 export function PackageList() {
@@ -137,24 +138,24 @@ export function PackageList() {
           )}
         </div>
         <div className="flex items-center gap-2">
-          <button
+          <Button
+            variant="ghost"
+            size="icon"
             onClick={() => refetch()}
-            className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-500"
           >
             <RefreshCw size={18} />
-          </button>
-          <button
+          </Button>
+          <Button
             onClick={() => setShowSearch(!showSearch)}
-            className="flex items-center gap-2 px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600"
+            leftIcon={<Plus size={18} />}
           >
-            <Plus size={18} />
             {t('packages.addPackage')}
-          </button>
+          </Button>
         </div>
       </div>
 
       {showSearch && (
-        <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 space-y-4">
+        <Card className="space-y-4">
           {/* 手动输入安装 */}
           <div>
             <div className="flex items-center gap-2 mb-2">
@@ -181,13 +182,13 @@ export function PackageList() {
                 />
                 <span className="text-sm text-gray-600 dark:text-gray-400">{t('common.dev')}</span>
               </label>
-              <button
+              <Button
                 onClick={handleBatchInstall}
-                disabled={installMutation.isPending || !manualInput.trim()}
-                className="px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600 disabled:opacity-50"
+                disabled={!manualInput.trim()}
+                loading={installMutation.isPending}
               >
                 {t('common.install')}
-              </button>
+              </Button>
             </div>
             <p className="mt-1.5 text-xs text-gray-500">{t('packages.quickInstallHint')}</p>
           </div>
@@ -225,37 +226,39 @@ export function PackageList() {
                       </div>
                     </div>
                     <div className="flex gap-2">
-                      <button
+                      <Button
+                        size="sm"
                         onClick={() => handleInstall(pkg.name)}
-                        disabled={installMutation.isPending}
-                        className="px-3 py-1 text-sm bg-primary-500 text-white rounded hover:bg-primary-600 disabled:opacity-50"
+                        loading={installMutation.isPending}
                       >
                         {t('common.install')}
-                      </button>
-                      <button
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="outline"
                         onClick={() => handleInstall(pkg.name, true)}
                         disabled={installMutation.isPending}
-                        className="px-3 py-1 text-sm border border-primary-500 text-primary-500 rounded hover:bg-primary-50 dark:hover:bg-primary-900/20 disabled:opacity-50"
                       >
                         {t('common.dev')}
-                      </button>
+                      </Button>
                     </div>
                   </div>
                 ))}
               </div>
             )}
           </div>
-        </div>
+        </Card>
       )}
 
-      <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
+      <Card padding="none" className="overflow-hidden">
         {isLoading ? (
           <div className="p-8 text-center text-gray-500">{t('common.loading')}</div>
         ) : packages.length === 0 ? (
-          <div className="p-8 text-center text-gray-500">
-            <PackageIcon size={48} className="mx-auto mb-4 opacity-30" />
-            {t('packages.noPackages')}
-          </div>
+          <EmptyState
+            icon={PackageIcon}
+            title={t('packages.noPackages')}
+            className="py-8"
+          />
         ) : (
           <table className="w-full">
             <thead className="bg-gray-50 dark:bg-gray-700/50">
@@ -308,36 +311,34 @@ export function PackageList() {
                       )}
                     </td>
                     <td className="px-4 py-3">
-                      <span
-                        className={clsx(
-                          'px-2 py-0.5 text-xs rounded-full',
-                          pkg.isDev
-                            ? 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400'
-                            : 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'
-                        )}
+                      <Badge
+                        variant={pkg.isDev ? 'warning' : 'success'}
+                        size="sm"
                       >
                         {pkg.isDev ? t('common.dev') : t('common.prod')}
-                      </span>
+                      </Badge>
                     </td>
                     <td className="px-4 py-3 text-right">
                       <div className="flex items-center justify-end gap-1">
                         {updateStatus?.hasUpdate && (
-                          <button
+                          <Button
+                            variant="ghost"
+                            size="icon"
                             onClick={() => handleUpdate(pkg.name)}
-                            disabled={updateMutation.isPending}
-                            className="p-1.5 text-primary-500 hover:bg-primary-50 dark:hover:bg-primary-900/20 rounded disabled:opacity-50"
+                            loading={updateMutation.isPending}
                             title={t('common.update')}
                           >
-                            <ArrowUp size={16} />
-                          </button>
+                            <ArrowUp size={16} className="text-primary-500" />
+                          </Button>
                         )}
-                        <button
+                        <Button
+                          variant="ghost"
+                          size="icon"
                           onClick={() => handleUninstall(pkg.name)}
                           disabled={uninstallMutation.isPending}
-                          className="p-1.5 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded disabled:opacity-50"
                         >
-                          <Trash2 size={16} />
-                        </button>
+                          <Trash2 size={16} className="text-red-500" />
+                        </Button>
                       </div>
                     </td>
                   </tr>
@@ -346,7 +347,7 @@ export function PackageList() {
             </tbody>
           </table>
         )}
-      </div>
+      </Card>
 
       <ConfirmDialog
         open={confirmDialog.open && confirmDialog.type === 'uninstall'}
