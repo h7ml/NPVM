@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Search, Plus, Trash2, RefreshCw, Package as PackageIcon, Globe, Folder, ArrowUp, AlertTriangle } from 'lucide-react';
+import { Search, Plus, Trash2, RefreshCw, Package as PackageIcon, Globe, Folder, ArrowUp, AlertTriangle, Terminal } from 'lucide-react';
 import {
   useInstalledPackages,
   useSearchPackages,
@@ -16,6 +16,8 @@ export function PackageList() {
   const { t } = useTranslation();
   const [searchQuery, setSearchQuery] = useState('');
   const [showSearch, setShowSearch] = useState(false);
+  const [manualInput, setManualInput] = useState('');
+  const [installAsDev, setInstallAsDev] = useState(false);
   const { data: packages = [], isLoading, refetch } = useInstalledPackages();
   const { data: searchResults = [] } = useSearchPackages(searchQuery);
   const installMutation = useInstallPackage();
@@ -47,6 +49,14 @@ export function PackageList() {
     await installMutation.mutateAsync({ packages: [name], dev });
     setShowSearch(false);
     setSearchQuery('');
+  };
+
+  const handleBatchInstall = async () => {
+    const packages = manualInput.trim().split(/\s+/).filter(Boolean);
+    if (packages.length === 0) return;
+    await installMutation.mutateAsync({ packages, dev: installAsDev });
+    setManualInput('');
+    setShowSearch(false);
   };
 
   const handleUninstall = async (name: string) => {
@@ -130,58 +140,97 @@ export function PackageList() {
       </div>
 
       {showSearch && (
-        <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4">
-          <div className="relative">
-            <Search
-              className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
-              size={18}
-            />
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder={t('packages.searchPlaceholder')}
-              className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-200 dark:border-gray-600 bg-transparent text-gray-800 dark:text-gray-200"
-              autoFocus
-            />
+        <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 space-y-4">
+          {/* 手动输入安装 */}
+          <div>
+            <div className="flex items-center gap-2 mb-2">
+              <Terminal size={16} className="text-gray-400" />
+              <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                {t('packages.quickInstall')}
+              </span>
+            </div>
+            <div className="flex gap-2">
+              <input
+                type="text"
+                value={manualInput}
+                onChange={(e) => setManualInput(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && handleBatchInstall()}
+                placeholder={t('packages.quickInstallPlaceholder')}
+                className="flex-1 px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-600 bg-transparent text-gray-800 dark:text-gray-200 font-mono text-sm"
+              />
+              <label className="flex items-center gap-2 px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-600 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700">
+                <input
+                  type="checkbox"
+                  checked={installAsDev}
+                  onChange={(e) => setInstallAsDev(e.target.checked)}
+                  className="rounded border-gray-300 text-primary-500 focus:ring-primary-500"
+                />
+                <span className="text-sm text-gray-600 dark:text-gray-400">{t('common.dev')}</span>
+              </label>
+              <button
+                onClick={handleBatchInstall}
+                disabled={installMutation.isPending || !manualInput.trim()}
+                className="px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600 disabled:opacity-50"
+              >
+                {t('common.install')}
+              </button>
+            </div>
+            <p className="mt-1.5 text-xs text-gray-500">{t('packages.quickInstallHint')}</p>
           </div>
 
-          {searchResults.length > 0 && (
-            <div className="mt-4 space-y-2 max-h-64 overflow-y-auto">
-              {searchResults.map((pkg) => (
-                <div
-                  key={pkg.name}
-                  className="flex items-center justify-between p-3 rounded-lg bg-gray-50 dark:bg-gray-700/50"
-                >
-                  <div>
-                    <div className="font-medium text-gray-800 dark:text-gray-200">
-                      {pkg.name}
-                      <span className="ml-2 text-sm text-gray-500">{pkg.version}</span>
-                    </div>
-                    <div className="text-sm text-gray-500 truncate max-w-md">
-                      {pkg.description}
-                    </div>
-                  </div>
-                  <div className="flex gap-2">
-                    <button
-                      onClick={() => handleInstall(pkg.name)}
-                      disabled={installMutation.isPending}
-                      className="px-3 py-1 text-sm bg-primary-500 text-white rounded hover:bg-primary-600 disabled:opacity-50"
-                    >
-                      {t('common.install')}
-                    </button>
-                    <button
-                      onClick={() => handleInstall(pkg.name, true)}
-                      disabled={installMutation.isPending}
-                      className="px-3 py-1 text-sm border border-primary-500 text-primary-500 rounded hover:bg-primary-50 dark:hover:bg-primary-900/20 disabled:opacity-50"
-                    >
-                      {t('common.dev')}
-                    </button>
-                  </div>
-                </div>
-              ))}
+          {/* npm 搜索 */}
+          <div className="border-t border-gray-200 dark:border-gray-700 pt-4">
+            <div className="relative">
+              <Search
+                className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+                size={18}
+              />
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder={t('packages.searchPlaceholder')}
+                className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-200 dark:border-gray-600 bg-transparent text-gray-800 dark:text-gray-200"
+              />
             </div>
-          )}
+
+            {searchResults.length > 0 && (
+              <div className="mt-4 space-y-2 max-h-64 overflow-y-auto">
+                {searchResults.map((pkg) => (
+                  <div
+                    key={pkg.name}
+                    className="flex items-center justify-between p-3 rounded-lg bg-gray-50 dark:bg-gray-700/50"
+                  >
+                    <div>
+                      <div className="font-medium text-gray-800 dark:text-gray-200">
+                        {pkg.name}
+                        <span className="ml-2 text-sm text-gray-500">{pkg.version}</span>
+                      </div>
+                      <div className="text-sm text-gray-500 truncate max-w-md">
+                        {pkg.description}
+                      </div>
+                    </div>
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => handleInstall(pkg.name)}
+                        disabled={installMutation.isPending}
+                        className="px-3 py-1 text-sm bg-primary-500 text-white rounded hover:bg-primary-600 disabled:opacity-50"
+                      >
+                        {t('common.install')}
+                      </button>
+                      <button
+                        onClick={() => handleInstall(pkg.name, true)}
+                        disabled={installMutation.isPending}
+                        className="px-3 py-1 text-sm border border-primary-500 text-primary-500 rounded hover:bg-primary-50 dark:hover:bg-primary-900/20 disabled:opacity-50"
+                      >
+                        {t('common.dev')}
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
       )}
 
