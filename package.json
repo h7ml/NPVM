@@ -1,0 +1,61 @@
+{
+  "name": "npvm",
+  "version": "0.1.0",
+  "description": "Node Package Manager Visual Platform - A modern web UI for managing npm/yarn/pnpm/bun packages",
+  "private": true,
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/h7ml/NPVM.git"
+  },
+  "homepage": "https://github.com/h7ml/NPVM#readme",
+  "bugs": {
+    "url": "https://github.com/h7ml/NPVM/issues"
+  },
+  "author": {
+    "name": "h7ml",
+    "url": "https://github.com/h7ml"
+  },
+  "contributors": [
+    {
+      "name": "h7ml",
+      "url": "https://github.com/h7ml"
+    }
+  ],
+  "license": "MIT",
+  "keywords": [
+    "npm",
+    "yarn",
+    "pnpm",
+    "bun",
+    "package-manager",
+    "visual",
+    "gui",
+    "node",
+    "nodejs",
+    "dependency",
+    "security",
+    "audit",
+    "registry",
+    "monorepo"
+  ],
+  "scripts": {
+    "dev": "turbo dev",
+    "build": "turbo build",
+    "lint": "turbo lint",
+    "test": "turbo test",
+    "clean": "turbo clean && rm -rf node_modules",
+    "typecheck": "turbo typecheck",
+    "prepare": "echo 'Ready'"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "turbo": "^2.4.0",
+    "typescript": "^5.7.0"
+  },
+  "packageManager": "pnpm@9.15.0",
+  "engines": {
+    "node": ">=20.0.0",
+    "pnpm": ">=9.0.0"
+  }
+}

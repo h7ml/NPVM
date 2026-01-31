@@ -1,0 +1,49 @@
+{
+  "name": "npvm",
+  "version": "0.1.0",
+  "description": "Node Package Manager Visual Platform - CLI tool",
+  "type": "module",
+  "bin": {
+    "npvm": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "start": "tsx src/index.ts start",
+    "typecheck": "tsc --noEmit"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/h7ml/NPVM.git",
+    "directory": "packages/cli"
+  },
+  "homepage": "https://github.com/h7ml/NPVM#readme",
+  "bugs": {
+    "url": "https://github.com/h7ml/NPVM/issues"
+  },
+  "author": "h7ml",
+  "license": "MIT",
+  "keywords": [
+    "npm",
+    "yarn",
+    "pnpm",
+    "bun",
+    "package-manager",
+    "cli",
+    "visual"
+  ],
+  "dependencies": {
+    "@npvm/server": "workspace:*",
+    "commander": "^13.0.0",
+    "open": "^10.1.0"
+  },
+  "devDependencies": {
+    "tsx": "^4.19.0",
+    "typescript": "^5.7.0"
+  },
+  "files": [
+    "dist"
+  ],
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

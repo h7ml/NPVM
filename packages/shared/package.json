@@ -1,0 +1,29 @@
+{
+  "name": "@npvm/shared",
+  "version": "0.1.0",
+  "description": "Shared types and utilities for NPVM",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "typecheck": "tsc --noEmit"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/h7ml/NPVM.git",
+    "directory": "packages/shared"
+  },
+  "author": "h7ml",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^5.7.0"
+  }
+}

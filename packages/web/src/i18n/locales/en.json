@@ -1,0 +1,86 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "save": "Save",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "delete": "Delete",
+    "search": "Search",
+    "refresh": "Refresh",
+    "install": "Install",
+    "uninstall": "Uninstall",
+    "update": "Update",
+    "dev": "Dev",
+    "prod": "Prod",
+    "active": "Active",
+    "clear": "Clear"
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "packages": "Packages",
+    "dependencies": "Dependencies",
+    "security": "Security",
+    "settings": "Settings"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "totalPackages": "Total Packages",
+    "dependencies": "Dependencies",
+    "devDependencies": "Dev Dependencies",
+    "packageManagers": "Package Managers",
+    "availablePm": "Available Package Managers",
+    "quickActions": "Quick Actions",
+    "notInstalled": "Not installed",
+    "installPackage": "Install Package",
+    "viewDeps": "View Dependencies",
+    "securityAudit": "Security Audit",
+    "checkUpdates": "Check Updates"
+  },
+  "packages": {
+    "title": "Installed Packages",
+    "globalTitle": "Global Packages",
+    "addPackage": "Add Package",
+    "searchPlaceholder": "Search packages on npm...",
+    "name": "Name",
+    "version": "Version",
+    "type": "Type",
+    "actions": "Actions",
+    "noPackages": "No packages installed",
+    "confirmUninstall": "Uninstall {{name}}?",
+    "confirmUpdateAll": "Update {{count}} packages?",
+    "updateAll": "Update all packages",
+    "globalMode": "Global",
+    "projectMode": "Project",
+    "switchToProject": "Switch to project mode",
+    "switchToGlobal": "Switch to global mode"
+  },
+  "deps": {
+    "title": "Dependency Tree",
+    "loading": "Loading dependency tree...",
+    "noDeps": "No dependencies found",
+    "circular": "circular"
+  },
+  "security": {
+    "title": "Security Audit",
+    "runAudit": "Run Audit",
+    "scanning": "Scanning...",
+    "noVulnerabilities": "No vulnerabilities found",
+    "depsSecure": "Your dependencies are secure",
+    "clickToScan": "Click \"Run Audit\" to scan your dependencies for vulnerabilities",
+    "critical": "Critical",
+    "high": "High",
+    "moderate": "Moderate",
+    "low": "Low",
+    "moreInfo": "More info"
+  },
+  "settings": {
+    "title": "Settings",
+    "projectPath": "Project Path",
+    "registry": "Registry",
+    "language": "Language"
+  },
+  "terminal": {
+    "title": "Terminal",
+    "noOutput": "No output yet..."
+  }
+}

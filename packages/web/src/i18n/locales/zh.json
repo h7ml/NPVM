@@ -1,0 +1,86 @@
+{
+  "common": {
+    "loading": "加载中...",
+    "save": "保存",
+    "cancel": "取消",
+    "confirm": "确认",
+    "delete": "删除",
+    "search": "搜索",
+    "refresh": "刷新",
+    "install": "安装",
+    "uninstall": "卸载",
+    "update": "更新",
+    "dev": "开发",
+    "prod": "生产",
+    "active": "当前",
+    "clear": "清空"
+  },
+  "nav": {
+    "dashboard": "仪表盘",
+    "packages": "包管理",
+    "dependencies": "依赖分析",
+    "security": "安全扫描",
+    "settings": "设置"
+  },
+  "dashboard": {
+    "title": "仪表盘",
+    "totalPackages": "总包数",
+    "dependencies": "生产依赖",
+    "devDependencies": "开发依赖",
+    "packageManagers": "包管理器",
+    "availablePm": "可用的包管理器",
+    "quickActions": "快捷操作",
+    "notInstalled": "未安装",
+    "installPackage": "安装包",
+    "viewDeps": "查看依赖",
+    "securityAudit": "安全扫描",
+    "checkUpdates": "检查更新"
+  },
+  "packages": {
+    "title": "已安装的包",
+    "globalTitle": "全局包",
+    "addPackage": "添加包",
+    "searchPlaceholder": "搜索 npm 包...",
+    "name": "名称",
+    "version": "版本",
+    "type": "类型",
+    "actions": "操作",
+    "noPackages": "暂无已安装的包",
+    "confirmUninstall": "确定卸载 {{name}}？",
+    "confirmUpdateAll": "确定升级 {{count}} 个包？",
+    "updateAll": "升级所有包",
+    "globalMode": "全局",
+    "projectMode": "项目",
+    "switchToProject": "切换至项目模式",
+    "switchToGlobal": "切换至全局模式"
+  },
+  "deps": {
+    "title": "依赖树",
+    "loading": "加载依赖树中...",
+    "noDeps": "未找到依赖",
+    "circular": "循环引用"
+  },
+  "security": {
+    "title": "安全扫描",
+    "runAudit": "开始扫描",
+    "scanning": "扫描中...",
+    "noVulnerabilities": "未发现漏洞",
+    "depsSecure": "您的依赖是安全的",
+    "clickToScan": "点击「开始扫描」检查依赖漏洞",
+    "critical": "严重",
+    "high": "高危",
+    "moderate": "中等",
+    "low": "低危",
+    "moreInfo": "了解更多"
+  },
+  "settings": {
+    "title": "设置",
+    "projectPath": "项目路径",
+    "registry": "镜像源",
+    "language": "语言"
+  },
+  "terminal": {
+    "title": "终端",
+    "noOutput": "暂无输出..."
+  }
+}

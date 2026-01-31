@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  npvm:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3456:3456"
+    volumes:
+      # 挂载主机的包管理器和项目目录
+      - ~/.npm:/home/npvm/.npm:ro
+      - ~/.pnpm-store:/home/npvm/.pnpm-store:ro
+      - ~/.yarn:/home/npvm/.yarn:ro
+      - ~/.bun:/home/npvm/.bun:ro
+      # 挂载项目目录 (可选)
+      - ./:/workspace:ro
+    environment:
+      - NODE_ENV=production
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3456/api/pm/detect"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+  # 开发模式
+  npvm-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: builder
+    ports:
+      - "3456:3456"
+      - "5173:5173"
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - /app/packages/server/node_modules
+      - /app/packages/web/node_modules
+      - /app/packages/shared/node_modules
+    environment:
+      - NODE_ENV=development
+    command: pnpm dev
+    profiles:
+      - dev
