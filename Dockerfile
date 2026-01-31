@@ -14,8 +14,11 @@ COPY packages/server/package.json ./packages/server/
 COPY packages/web/package.json ./packages/web/
 COPY packages/cli/package.json ./packages/cli/
 
-# 安装依赖
+# 安装依赖（包括 devDependencies 用于构建）
 RUN pnpm install --frozen-lockfile
+
+# 确保 turbo 可用（某些环境可能需要显式安装）
+RUN pnpm add -g turbo
 
 # 复制源代码
 COPY packages ./packages
