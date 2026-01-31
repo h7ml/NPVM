@@ -5,12 +5,12 @@
   "installCommand": "pnpm install",
   "framework": "vite",
   "functions": {
-    "api/[...path].ts": {
+    "api/remote/analyze.ts": {
       "maxDuration": 30
     }
   },
   "rewrites": [
-    { "source": "/api/:path*", "destination": "/api/:path*" },
-    { "source": "/((?!api|assets|docs).*)", "destination": "/index.html" }
+    { "source": "/api/remote/analyze", "destination": "/api/remote/analyze" },
+    { "source": "/((?!api|assets).*)", "destination": "/index.html" }
   ]
 }
