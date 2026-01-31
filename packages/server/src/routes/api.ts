@@ -11,6 +11,9 @@ import {
 } from '../services/registry.js';
 import { analyzeRemoteRepo } from '../services/remote.js';
 import { routeSchemas } from './schemas.js';
+import { readdirSync, statSync, existsSync } from 'fs';
+import { join, resolve, dirname } from 'path';
+import { homedir } from 'os';
 
 interface AppState {
   currentPm: PackageManagerType;
@@ -120,6 +123,50 @@ export async function registerRoutes(app: FastifyInstance, state: AppState) {
     state.projectPath = request.body.path;
     state.isGlobal = false;
     return { success: true, data: { path: state.projectPath, isGlobal: false } };
+  });
+
+  // 浏览文件系统目录
+  app.get<{ Querystring: { path?: string } }>('/api/fs/browse', async (request) => {
+    const targetPath = request.query.path || homedir();
+    const resolvedPath = resolve(targetPath);
+
+    if (!existsSync(resolvedPath)) {
+      return { success: false, error: 'Path does not exist' };
+    }
+
+    try {
+      const stat = statSync(resolvedPath);
+      if (!stat.isDirectory()) {
+        return { success: false, error: 'Path is not a directory' };
+      }
+
+      const entries = readdirSync(resolvedPath, { withFileTypes: true });
+      const directories = entries
+        .filter((entry) => {
+          if (!entry.isDirectory()) return false;
+          if (entry.name.startsWith('.')) return false;
+          // 排除系统目录
+          if (['node_modules', 'Library', 'Applications'].includes(entry.name)) return false;
+          return true;
+        })
+        .map((entry) => ({
+          name: entry.name,
+          path: join(resolvedPath, entry.name),
+          isProject: existsSync(join(resolvedPath, entry.name, 'package.json')),
+        }))
+        .sort((a, b) => a.name.localeCompare(b.name));
+
+      return {
+        success: true,
+        data: {
+          current: resolvedPath,
+          parent: dirname(resolvedPath) !== resolvedPath ? dirname(resolvedPath) : null,
+          directories,
+        },
+      };
+    } catch {
+      return { success: false, error: 'Cannot read directory' };
+    }
   });
 
   // 获取全局模式状态

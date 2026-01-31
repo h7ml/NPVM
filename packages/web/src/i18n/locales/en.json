@@ -157,7 +157,15 @@
     "loading": "Loading...",
     "loadFailed": "Failed to load repo info",
     "author": "Author",
-    "description": "A modern visual platform for managing Node.js packages"
+    "description": "A modern visual platform for managing Node.js packages",
+    "browse": "Browse",
+    "selectFolder": "Select Folder",
+    "selectThis": "Select This",
+    "go": "Go",
+    "folderHint": "Directories with package.json are highlighted",
+    "folderLoadFailed": "Failed to load directory",
+    "noSubfolders": "No subfolders in this directory",
+    "projectPathHint": "Set the project root directory for package management"
   },
   "terminal": {
     "title": "Terminal",

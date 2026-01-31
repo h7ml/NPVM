@@ -157,7 +157,15 @@
     "loading": "加载中...",
     "loadFailed": "加载仓库信息失败",
     "author": "作者",
-    "description": "现代化的 Node.js 包管理可视化平台"
+    "description": "现代化的 Node.js 包管理可视化平台",
+    "browse": "浏览",
+    "selectFolder": "选择文件夹",
+    "selectThis": "选择此目录",
+    "go": "前往",
+    "folderHint": "带有 package.json 的目录会高亮显示",
+    "folderLoadFailed": "无法加载目录",
+    "noSubfolders": "此目录下没有子文件夹",
+    "projectPathHint": "设置项目根目录，用于包管理操作"
   },
   "terminal": {
     "title": "终端",

@@ -22,6 +22,7 @@ import {
   type LucideIcon,
 } from 'lucide-react';
 import { Card, Button, Badge, Spinner } from '../components/ui';
+import { FolderPicker } from '../components/ui/FolderPicker';
 import { useToast } from '../components/ui/Toast';
 import { clsx } from 'clsx';
 
@@ -61,6 +62,7 @@ export function Settings() {
   const [repoInfo, setRepoInfo] = useState<RepoInfo | null>(null);
   const [repoLoading, setRepoLoading] = useState(true);
   const [repoError, setRepoError] = useState(false);
+  const [folderPickerOpen, setFolderPickerOpen] = useState(false);
 
   const navItems: NavItem[] = [
     { key: 'connection', label: t('settings.apiBase'), icon: Server },
@@ -293,9 +295,10 @@ export function Settings() {
       case 'project':
         return (
           <Card>
-            <h3 className="font-semibold text-gray-800 dark:text-gray-100 mb-4">
+            <h3 className="font-semibold text-gray-800 dark:text-gray-100 mb-2">
               {t('settings.projectPath')}
             </h3>
+            <p className="text-sm text-gray-500 mb-4">{t('settings.projectPathHint')}</p>
             <div className="flex flex-col sm:flex-row gap-3">
               <input
                 type="text"
@@ -304,10 +307,21 @@ export function Settings() {
                 className="flex-1 px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-600 bg-transparent text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500"
                 placeholder="/path/to/project"
               />
-              <Button onClick={handleSavePath}>
-                {t('common.save')}
-              </Button>
+              <div className="flex gap-2">
+                <Button variant="outline" onClick={() => setFolderPickerOpen(true)}>
+                  {t('settings.browse')}
+                </Button>
+                <Button onClick={handleSavePath}>
+                  {t('common.save')}
+                </Button>
+              </div>
             </div>
+            <FolderPicker
+              isOpen={folderPickerOpen}
+              onClose={() => setFolderPickerOpen(false)}
+              onSelect={(path) => setLocalPath(path)}
+              initialPath={localPath}
+            />
           </Card>
         );
 
