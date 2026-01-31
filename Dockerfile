@@ -35,9 +35,11 @@ RUN corepack enable && corepack prepare pnpm@9.15.0 --activate
 
 WORKDIR /app
 
-# 创建非 root 用户
+# 创建非 root 用户和数据目录
 RUN addgroup --system --gid 1001 nodejs && \
-    adduser --system --uid 1001 npvm
+    adduser --system --uid 1001 npvm && \
+    mkdir -p /app/data /home/npvm/.npm /home/npvm/.pnpm-store /home/npvm/.yarn /home/npvm/.bun && \
+    chown -R npvm:nodejs /app/data /home/npvm
 
 # 复制 workspace 配置
 COPY --from=builder /app/package.json ./
@@ -71,6 +73,7 @@ COPY --from=builder /app/script ./script
 USER npvm
 
 ENV NODE_ENV=production
+ENV NPVM_DATA_DIR=/app/data
 
 # 暴露端口
 EXPOSE 3456

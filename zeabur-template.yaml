@@ -18,10 +18,28 @@ spec:
         branch: main
       build:
         buildCommand: pnpm install && pnpm build
-        startCommand: node packages/cli/dist/index.js --port 3456
+        startCommand: node packages/server/dist/start.js
       ports:
         - port: 3456
           type: HTTP
       env:
         - name: NODE_ENV
           value: production
+        - name: NPVM_DATA_DIR
+          value: /app/data
+      volumes:
+        # 持久化全局包管理器缓存
+        - name: npm-cache
+          mountPath: /home/npvm/.npm
+        - name: pnpm-store
+          mountPath: /home/npvm/.pnpm-store
+        - name: yarn-cache
+          mountPath: /home/npvm/.yarn
+        - name: bun-cache
+          mountPath: /home/npvm/.bun
+        # 持久化项目数据和 node_modules
+        - name: project-data
+          mountPath: /app/data
+      resources:
+        memory: 1024Mi
+        cpu: 0.5
