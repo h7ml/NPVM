@@ -20,7 +20,7 @@
     "@npvm/shared": "workspace:*",
     "@tanstack/react-query": "^5.64.0",
     "clsx": "^2.1.0",
-    "i18next": "^24.2.3",
+    "i18next": "^25.8.0",
     "i18next-browser-languagedetector": "^8.2.0",
     "lucide-react": "^0.474.0",
     "react": "^18.3.0",
