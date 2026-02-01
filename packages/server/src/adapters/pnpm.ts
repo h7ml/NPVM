@@ -14,7 +14,7 @@ import type {
 } from '@dext7r/npvm-shared';
 import type { PackageManagerAdapter, InstallOptions, UninstallOptions, WorkspaceInfo } from './base.js';
 import { validatePackageNames, validateUrl } from '../utils/security.js';
-import { existsSync } from 'fs';
+import { existsSync, readFileSync } from 'fs';
 import { join } from 'path';
 
 export class PnpmAdapter implements PackageManagerAdapter {
@@ -387,13 +387,36 @@ export class PnpmAdapter implements PackageManagerAdapter {
     }
   }
 
-  async setRegistry(url: string): Promise<void> {
+  async setRegistry(url: string, cwd?: string): Promise<void> {
     // 安全验证
     validateUrl(url);
-    await execa('pnpm', ['config', 'set', 'registry', url]);
+
+    if (cwd) {
+      // 项目模式：写入项目的 .npmrc
+      const npmrcPath = join(cwd, '.npmrc');
+      const content = `registry=${url}\n`;
+      const fs = await import('fs');
+      fs.writeFileSync(npmrcPath, content);
+    } else {
+      // 全局模式
+      await execa('pnpm', ['config', 'set', 'registry', url]);
+    }
   }
 
-  async getRegistry(): Promise<string> {
+  async getRegistry(cwd?: string): Promise<string> {
+    if (cwd) {
+      // 项目模式：检查项目的 .npmrc
+      const npmrcPath = join(cwd, '.npmrc');
+      if (existsSync(npmrcPath)) {
+        const content = readFileSync(npmrcPath, 'utf-8');
+        const match = content.match(/registry=(.+)/);
+        if (match) {
+          return match[1].trim();
+        }
+      }
+    }
+
+    // 全局模式或项目中未配置
     const { stdout } = await execa('pnpm', ['config', 'get', 'registry']);
     return stdout.trim();
   }

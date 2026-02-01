@@ -422,16 +422,37 @@ export class BunAdapter implements PackageManagerAdapter {
     }
   }
 
-  async setRegistry(url: string): Promise<void> {
+  async setRegistry(url: string, cwd?: string): Promise<void> {
     // Validate registry URL
     validateUrl(url);
 
-    // Bun 通过 bunfig.toml 配置 registry
-    const { stdout } = await execa('echo', [`registry = "${url}"`]);
-    console.warn('Bun registry config:', stdout);
+    if (cwd) {
+      // 项目模式：写入项目的 bunfig.toml
+      const bunfigPath = join(cwd, 'bunfig.toml');
+      const content = `[install]\nregistry = "${url}"\n`;
+      const fs = await import('fs');
+      fs.writeFileSync(bunfigPath, content);
+    } else {
+      // 全局模式：Bun 通过 bunfig.toml 配置
+      const { stdout } = await execa('echo', [`registry = "${url}"`]);
+      console.warn('Bun registry config:', stdout);
+    }
   }
 
-  async getRegistry(): Promise<string> {
+  async getRegistry(cwd?: string): Promise<string> {
+    if (cwd) {
+      // 项目模式：检查项目的 bunfig.toml
+      const bunfigPath = join(cwd, 'bunfig.toml');
+      if (existsSync(bunfigPath)) {
+        const content = readFileSync(bunfigPath, 'utf-8');
+        const match = content.match(/registry\s*=\s*"(.+?)"/);
+        if (match) {
+          return match[1].trim();
+        }
+      }
+    }
+
+    // 默认返回官方 registry
     return 'https://registry.npmjs.org/';
   }
 }

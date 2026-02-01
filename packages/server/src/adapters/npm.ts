@@ -398,13 +398,36 @@ export class NpmAdapter implements PackageManagerAdapter {
     }
   }
 
-  async setRegistry(url: string): Promise<void> {
+  async setRegistry(url: string, cwd?: string): Promise<void> {
     // 安全验证：检查 URL 格式
     validateUrl(url);
-    await execa('npm', ['config', 'set', 'registry', url]);
+
+    if (cwd) {
+      // 项目模式：写入项目的 .npmrc
+      const npmrcPath = join(cwd, '.npmrc');
+      const content = `registry=${url}\n`;
+      const fs = await import('fs');
+      fs.writeFileSync(npmrcPath, content);
+    } else {
+      // 全局模式：设置全局配置
+      await execa('npm', ['config', 'set', 'registry', url]);
+    }
   }
 
-  async getRegistry(): Promise<string> {
+  async getRegistry(cwd?: string): Promise<string> {
+    if (cwd) {
+      // 项目模式：先检查项目的 .npmrc
+      const npmrcPath = join(cwd, '.npmrc');
+      if (existsSync(npmrcPath)) {
+        const content = readFileSync(npmrcPath, 'utf-8');
+        const match = content.match(/registry=(.+)/);
+        if (match) {
+          return match[1].trim();
+        }
+      }
+    }
+
+    // 全局模式或项目中未配置：读取全局配置
     const { stdout } = await execa('npm', ['config', 'get', 'registry']);
     return stdout.trim();
   }

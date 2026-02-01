@@ -101,14 +101,16 @@ export async function registerRoutes(app: FastifyInstance, state: AppState) {
   // 获取当前注册表
   app.get('/api/registry/current', { schema: routeSchemas.getCurrentRegistry }, async () => {
     const adapter = getAdapter(state.currentPm);
-    const url = await adapter.getRegistry();
+    const cwd = state.isGlobal ? undefined : state.projectPath;
+    const url = await adapter.getRegistry(cwd);
     return { success: true, data: { url } };
   });
 
   // 设置注册表
   app.put<{ Body: { url: string } }>('/api/registry/current', { schema: routeSchemas.setCurrentRegistry }, async (request) => {
     const adapter = getAdapter(state.currentPm);
-    await adapter.setRegistry(request.body.url);
+    const cwd = state.isGlobal ? undefined : state.projectPath;
+    await adapter.setRegistry(request.body.url, cwd);
     state.currentRegistry = request.body.url;
     return { success: true, data: { url: request.body.url } };
   });

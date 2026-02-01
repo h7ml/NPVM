@@ -426,13 +426,36 @@ export class YarnAdapter implements PackageManagerAdapter {
     }
   }
 
-  async setRegistry(url: string): Promise<void> {
+  async setRegistry(url: string, cwd?: string): Promise<void> {
     // 安全验证
     validateUrl(url);
-    await execa('yarn', ['config', 'set', 'registry', url]);
+
+    if (cwd) {
+      // 项目模式：写入项目的 .yarnrc.yml
+      const yarnrcPath = join(cwd, '.yarnrc.yml');
+      const content = `npmRegistryServer: "${url}"\n`;
+      const fs = await import('fs');
+      fs.writeFileSync(yarnrcPath, content);
+    } else {
+      // 全局模式
+      await execa('yarn', ['config', 'set', 'registry', url]);
+    }
   }
 
-  async getRegistry(): Promise<string> {
+  async getRegistry(cwd?: string): Promise<string> {
+    if (cwd) {
+      // 项目模式：检查项目的 .yarnrc.yml
+      const yarnrcPath = join(cwd, '.yarnrc.yml');
+      if (existsSync(yarnrcPath)) {
+        const content = readFileSync(yarnrcPath, 'utf-8');
+        const match = content.match(/npmRegistryServer:\s*"(.+?)"/);
+        if (match) {
+          return match[1].trim();
+        }
+      }
+    }
+
+    // 全局模式或项目中未配置
     const { stdout } = await execa('yarn', ['config', 'get', 'registry']);
     return stdout.trim();
   }

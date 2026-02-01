@@ -65,7 +65,7 @@ export interface PackageManagerAdapter {
 
   auditFix(cwd: string, onProgress?: (progress: OperationProgress) => void): Promise<AuditFixResult>;
 
-  setRegistry(url: string): Promise<void>;
+  setRegistry(url: string, cwd?: string): Promise<void>;
 
-  getRegistry(): Promise<string>;
+  getRegistry(cwd?: string): Promise<string>;
 }
